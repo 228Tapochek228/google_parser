@@ -9,6 +9,8 @@ END_RESULTS_WORD = 'ничего не найдено'
 FILTERS = [
     'google',  # обязательный фильтр, иначе сами ссылки гугла тоже будут парсится
     'rambler',
+    'wiki',
+    'instagram',
     'rutube',
     'habr',
     'alfabank',
@@ -128,6 +130,7 @@ def main():
     parser = argparse.ArgumentParser(description="Google parser")
     parser.add_argument("--dorks", help="Файл с дорками", required=True)
     parser.add_argument("--output", help="Файл для вывода (опционально)")
+    parser.add_argument("--depth", type=int, default=31, help="Глубина поиска (по умолчанию: 31)")
     parser.add_argument("--filter", action="store_true", help="Включить фильтрацию")
     args = parser.parse_args()
 
@@ -146,7 +149,7 @@ def main():
         
         for dork in dorks:
             print(f"Обработка дорка: {dork}")
-            for page_num in range(1, 31):
+            for page_num in range(1, args.depth + 1):  # +1 чтобы включить последнюю страницу
                 if not google_request(dork, page_num):
                     break
                 
